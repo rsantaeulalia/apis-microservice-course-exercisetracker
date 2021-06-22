@@ -43,9 +43,27 @@ const createAndSaveUser = (user, done) => {
     });
 }
 
+const fetchUsers = (done) => {
+  User.find({}, function(err, users) {
+    var userMap = [];
+
+    users.forEach(function(user) {
+      userMap.push({ _id: user._id, username: user.username });
+    });
+
+    done(null, userMap);  
+  });
+}
 
 app.post('/api/users', function (req, res) {
   createAndSaveUser(req.body.username, (err, doc) => {
+    if (err) return res.json(err);
+    return res.json(doc);
+  });
+});
+
+app.get('/api/users', function (req, res) {
+  fetchUsers((err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
   });
