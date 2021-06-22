@@ -21,7 +21,7 @@ const exerciseSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   username: String,
-  exercises: [exerciseSchema]
+  exercises: { type: [exerciseSchema], default: undefined }
 });
 
 const User = mongoose.model('ShortUrl', userSchema);
