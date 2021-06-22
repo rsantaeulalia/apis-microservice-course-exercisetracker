@@ -43,20 +43,38 @@ const createAndSaveUser = (user, done) => {
     });
 }
 
+const addExerciseToUser = (id, exercise, done) => {
+  User.update({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, { error: "User not found" });
+    }
+  });
+}
+
 const fetchUsers = (done) => {
-  User.find({}, function(err, users) {
+  User.find({}, function (err, users) {
     var userMap = [];
 
-    users.forEach(function(user) {
+    users.forEach(function (user) {
       userMap.push({ _id: user._id, username: user.username });
     });
 
-    done(null, userMap);  
+    done(null, userMap);
   });
 }
 
 app.post('/api/users', function (req, res) {
   createAndSaveUser(req.body.username, (err, doc) => {
+    if (err) return res.json(err);
+    return res.json(doc);
+  });
+});
+
+app.post('/api/users/:_id/exercises', function (req, res) {
+  const exercise = { description: req.body.description, duration: req.body.duration, date: req.body.date ? req.body.date : new Date() }
+  addExerciseToUser(req.params._id, exercise, (err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
   });
