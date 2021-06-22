@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   exercises: { type: [exerciseSchema], default: undefined }
 });
 
-const User = mongoose.model('ShortUrl', userSchema);
+const User = mongoose.model('User', userSchema);
 
 app.use(cors())
 app.use(express.static('public'))
