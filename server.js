@@ -70,7 +70,7 @@ const fetchExercises = (id, from, to, limit, done) => {
     where('exercises.date').gte(from).
     where('exercises.date').lte(to).
     limit(limit).exec(function (err, user) {
-      if (err) return res.json(err);
+      if (err) return done(null, err);
       if (user) {
         done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
       } else {
