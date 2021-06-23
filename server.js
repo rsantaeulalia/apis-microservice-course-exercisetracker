@@ -68,7 +68,7 @@ const fetchUsers = (done) => {
 const fetchExercises = (id, done) => {
   User.findById(id, function (err, user) {
     if (user) {
-      done(null, { _id: user._id, username: user.username, count: user.exercises.size, log: users.exercises });
+      done(null, { _id: user._id, username: user.username, count: user.exercises.size, log: user.exercises });
     } else {
       done(null, { error: "User not found" });
     }
@@ -90,7 +90,7 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   });
 });
 
-app.get('/api/users/:_id/exercises', function (req, res) {
+app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, (err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
