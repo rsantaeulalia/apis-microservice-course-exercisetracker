@@ -65,14 +65,18 @@ const fetchUsers = (done) => {
   });
 }
 
-const fetchExercises = (id, done) => {
-  User.findById(id, function (err, user) {
-    if (user) {
-      done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
-    } else {
-      done(null, { error: "User not found" });
-    }
-  });
+const fetchExercises = (id, from, to, limit, done) => {
+  User.find({ '_id': id }).
+    where('exercises.date').gte(from).
+    where('exercises.date').lte(to).
+    limit(limit).exec(function (err, user) {
+      if (err) return res.json(err);
+      if (user) {
+        done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
+      } else {
+        done(null, { error: "User not found" });
+      }
+    });
 }
 
 app.post('/api/users', function (req, res) {
