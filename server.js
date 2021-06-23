@@ -68,7 +68,7 @@ const fetchUsers = (done) => {
 const fetchExercises = (id, done) => {
   User.findById(id, function (err, user) {
     if (user) {
-      done(null, { _id: user._id, username: user.username, count: user.exercises.size, log: user.exercises });
+      done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
     } else {
       done(null, { error: "User not found" });
     }
