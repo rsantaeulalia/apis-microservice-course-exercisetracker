@@ -65,6 +65,16 @@ const fetchUsers = (done) => {
   });
 }
 
+const fetchExercises = (id, done) => {
+  User.findById(id, function (err, user) {
+    if (user) {
+      done(null, { _id: user._id, username: user.username, count: user.exercises.size, log: users.exercises });
+    } else {
+      done(null, { error: "User not found" });
+    }
+  });
+}
+
 app.post('/api/users', function (req, res) {
   createAndSaveUser(req.body.username, (err, doc) => {
     if (err) return res.json(err);
@@ -75,6 +85,13 @@ app.post('/api/users', function (req, res) {
 app.post('/api/users/:_id/exercises', function (req, res) {
   const exercise = { description: req.body.description, duration: req.body.duration, date: req.body.date ? req.body.date : new Date() }
   addExerciseToUser(req.params._id, exercise, (err, doc) => {
+    if (err) return res.json(err);
+    return res.json(doc);
+  });
+});
+
+app.get('/api/users/:_id/exercises', function (req, res) {
+  fetchExercises(req.params._id, (err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
   });
