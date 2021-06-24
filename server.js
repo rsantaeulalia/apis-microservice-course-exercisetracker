@@ -94,7 +94,7 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   });
 });
 
-app.get('/api/users/:_id/logs?:from?&:to?&:limit?', function (req, res) {
+app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
