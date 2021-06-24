@@ -72,7 +72,7 @@ const fetchExercises = (id, from, to, limit, done) => {
     limit(limit).exec(function (err, user) {
       if (err) return done(null, err);
       if (user) {
-        done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
+        done(null, { _id: user._id, username: user.username, count: user.exercises ? user.exercises.length : 0, log: user.exercises });
       } else {
         done(null, { error: "User not found" });
       }
