@@ -44,7 +44,7 @@ const createAndSaveUser = (user, done) => {
 }
 
 const addExerciseToUser = (id, exercise, done) => {
-  User.updateOne({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
+  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
     if (user) {
       done(null, user);
     } else {
