@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const exerciseSchema = new mongoose.Schema({
   description: { type: String, required: true },
@@ -94,7 +94,7 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   });
 });
 
-app.get('/api/users/:_id/logs:from?&:to?&:limit?', function (req, res) {
+app.get('/api/users/:_id/logs?:from?&:to?&:limit?', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
     if (err) return res.json(err);
     return res.json(doc);
