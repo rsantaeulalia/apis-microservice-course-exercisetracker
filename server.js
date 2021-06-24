@@ -66,10 +66,19 @@ const fetchUsers = (done) => {
 }
 
 const fetchExercises = (id, from, to, limit, done) => {
-  User.find({ '_id': id }).
-    where('exercises.date').gte(from).
-    where('exercises.date').lte(to).
-    limit(limit).exec(function (err, user) {
+  const query = User.find({ '_id': id });
+
+  if(from){
+    query.where('exercises.date').gte(from);
+  }
+  if(to){
+    where('exercises.date').lte(to);
+  }
+  if(limit){
+    query.limit(limit);
+  }
+
+ query.exec(function (err, user) {
       if (err) return done(null, err);
       if (user) {
         done(null, { _id: user._id, username: user.username, count: user.exercises ? user.exercises.length : 0, log: user.exercises });
