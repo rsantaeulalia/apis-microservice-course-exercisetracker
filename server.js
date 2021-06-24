@@ -44,7 +44,7 @@ const createAndSaveUser = (user, done) => {
 }
 
 const addExerciseToUser = (id, exercise, done) => {
-  User.update({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
+  User.updateOne({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
     if (user) {
       done(null, user);
     } else {
@@ -81,8 +81,7 @@ const fetchExercises = (id, from, to, limit, done) => {
  query.exec(function (err, user) {
       if (err) return done(null, err);
       if (user) {
-        console.log(user);
-        done(null, { _id: user._id, username: user.username, count: user.exercises.length, log: user.exercises });
+        done(null, user);
       } else {
         done(null, { error: "User not found" });
       }
@@ -107,7 +106,6 @@ app.post('/api/users/:_id/exercises', function (req, res) {
 app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
     if (err) return res.json(err);
-    console.log(doc);
     return res.json(doc);
   });
 });
