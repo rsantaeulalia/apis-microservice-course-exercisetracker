@@ -92,7 +92,6 @@ const fetchExercises = (id, from, to, limit, done) => {
       resObj["username"] = result.username;
       resObj["count"] = result.exercises ? result.exercises.length : 0;
       resObj["log"] = result.exercises;
-      res.json(resObj);
       done(null, resObj);
     } else {
       done(null, { error: "User not found" });
