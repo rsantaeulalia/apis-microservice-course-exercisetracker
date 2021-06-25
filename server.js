@@ -44,9 +44,10 @@ const createAndSaveUser = (user, done) => {
 }
 
 const addExerciseToUser = (id, exercise, done) => {
-  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, {new: true}, function (err, user) {
+  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, { new: true }, function (err, user) {
     if (user) {
-      done(null, user);
+      const { _id, username, exercises } = user;
+      done(null, { _id, username, exercises });
     } else {
       done(null, { error: "User not found" });
     }
@@ -68,24 +69,25 @@ const fetchUsers = (done) => {
 const fetchExercises = (id, from, to, limit, done) => {
   const query = User.find({ '_id': id });
 
-  if(from){
+  if (from) {
     query.where('exercises.date').gte(from);
   }
-  if(to){
+  if (to) {
     where('exercises.date').lte(to);
   }
-  if(limit){
+  if (limit) {
     query.limit(limit);
   }
 
- query.exec(function (err, user) {
-      if (err) return done(null, err);
-      if (user) {
-        done(null, user);
-      } else {
-        done(null, { error: "User not found" });
-      }
-    });
+  query.exec(function (err, user) {
+    if (err) return done(null, err);
+    if (user) {
+      const { _id, username, exercises } = user;
+      done(null, { _id, username, count: exercises.length, exercises });
+    } else {
+      done(null, { error: "User not found" });
+    }
+  });
 }
 
 //USA JSON.parse(data);
@@ -101,14 +103,14 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   const exercise = { description: req.body.description, duration: req.body.duration, date: req.body.date ? req.body.date : new Date() }
   addExerciseToUser(req.params._id, exercise, (err, updatedUser) => {
     if (err) return res.json(err);
-    return res.json({ '_id': updatedUser._id, 'username': updatedUser.username, 'exercises': updatedUser.exercises });
+    return res.json(updatedUser);
   });
 });
 
 app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, userExercises) => {
     if (err) return res.json(err);
-    return res.json({ '_id': userExercises._id, 'username': userExercises.username, 'count': (userExercises.exercises ? userExercises.exercises.length : 0), 'logs': userExercises.exercises });
+    return res.json(userExercises);
   });
 });
 
