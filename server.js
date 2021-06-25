@@ -44,7 +44,7 @@ const createAndSaveUser = (user, done) => {
 }
 
 const addExerciseToUser = (id, exercise, done) => {
-  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, function (err, user) {
+  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, {new: true}, function (err, user) {
     if (user) {
       done(null, user);
     } else {
@@ -88,6 +88,8 @@ const fetchExercises = (id, from, to, limit, done) => {
     });
 }
 
+//USA JSON.parse(data);
+
 app.post('/api/users', function (req, res) {
   createAndSaveUser(req.body.username, (err, doc) => {
     if (err) return res.json(err);
@@ -99,14 +101,16 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   const exercise = { description: req.body.description, duration: req.body.duration, date: req.body.date ? req.body.date : new Date() }
   addExerciseToUser(req.params._id, exercise, (err, doc) => {
     if (err) return res.json(err);
-    return res.json(doc);
+    const updatedUser = JSON.parse(doc);
+    return res.json({ _id: updatedUser._id, username: updatedUser.username, exercises: updatedUser.exercises });
   });
 });
 
 app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
     if (err) return res.json(err);
-    return res.json(doc);
+    const logs = JSON.parse(doc);
+    return res.json({ _id: logs._id, username: logs.username, count: logs.exercises.length, logs: logs.exercises });
   });
 });
 
