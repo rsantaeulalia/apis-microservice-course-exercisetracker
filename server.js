@@ -103,10 +103,9 @@ app.post("/api/users/:_id/exercises", function(req, res){
       var exercise = {};
       resObj["_id"] = result._id;
       resObj["username"] = result.username;
-      exercise["date"] = newExercise.date;
-      exercise["duration"] = newExercise.duration;
-      exercise["description"] = newExercise.description;
-      resObj["exercise"] = exercise;
+      resObj["date"] = newExercise.date;
+      resObj["duration"] = newExercise.duration;
+      resObj["description"] = newExercise.description;
       res.json(resObj);
       console.log(result);
   });
