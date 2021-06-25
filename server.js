@@ -99,17 +99,15 @@ app.post('/api/users', function (req, res) {
 
 app.post('/api/users/:_id/exercises', function (req, res) {
   const exercise = { description: req.body.description, duration: req.body.duration, date: req.body.date ? req.body.date : new Date() }
-  addExerciseToUser(req.params._id, exercise, (err, doc) => {
+  addExerciseToUser(req.params._id, exercise, (err, updatedUser) => {
     if (err) return res.json(err);
-    const updatedUser = JSON.parse(doc);
     return res.json({ '_id': updatedUser._id, 'username': updatedUser.username, 'exercises': updatedUser.exercises });
   });
 });
 
 app.get('/api/users/:_id/logs', function (req, res) {
-  fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
+  fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, userExercises) => {
     if (err) return res.json(err);
-    const userExercises = JSON.parse(doc);
     return res.json({ '_id': userExercises._id, 'username': userExercises.username, 'count': (userExercises.exercises ? userExercises.exercises.length : 0), 'logs': userExercises.exercises });
   });
 });
