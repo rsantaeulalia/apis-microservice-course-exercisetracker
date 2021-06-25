@@ -44,10 +44,15 @@ const createAndSaveUser = (user, done) => {
 }
 
 const addExerciseToUser = (id, exercise, done) => {
-  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, { new: true }, function (err, user) {
-    if (user) {
-      const { _id, username, exercises } = user;
-      done(null, { _id, username, exercises });
+  User.findOneAndUpdate({ _id: id }, { $push: { exercises: exercise } }, { new: true }, function (err, result) {
+    if (result) {
+      var resObj = {};
+      resObj["_id"] = result._id;
+      resObj["username"] = result.username;
+      resObj["date"] = exercise.date;
+      resObj["duration"] = exercise.duration;
+      resObj["description"] = exercise.description;
+      done(null, resObj);
     } else {
       done(null, { error: "User not found" });
     }
@@ -79,11 +84,16 @@ const fetchExercises = (id, from, to, limit, done) => {
     query.limit(limit);
   }
 
-  query.exec(function (err, user) {
+  query.exec(function (err, result) {
     if (err) return done(null, err);
-    if (user) {
-      const { _id, username, exercises } = user;
-      done(null, { _id, username, count: (exercises ? exercises.length : 0), exercises });
+    if (result) {
+      var resObj = {};
+      resObj["_id"] = result._id;
+      resObj["username"] = result.username;
+      resObj["count"] = result.exercises ? result.exercises.length : 0;
+      resObj["log"] = result.exercises;
+      res.json(resObj);
+      done(null, resObj);
     } else {
       done(null, { error: "User not found" });
     }
