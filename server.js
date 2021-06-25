@@ -102,7 +102,7 @@ app.post('/api/users/:_id/exercises', function (req, res) {
   addExerciseToUser(req.params._id, exercise, (err, doc) => {
     if (err) return res.json(err);
     const updatedUser = JSON.parse(doc);
-    return res.json({ _id: updatedUser._id, username: updatedUser.username, exercises: updatedUser.exercises });
+    return res.json({ '_id': updatedUser._id, 'username': updatedUser.username, 'exercises': updatedUser.exercises });
   });
 });
 
@@ -110,7 +110,7 @@ app.get('/api/users/:_id/logs', function (req, res) {
   fetchExercises(req.params._id, req.params.from, req.params.to, req.params.limit, (err, doc) => {
     if (err) return res.json(err);
     const userExercises = JSON.parse(doc);
-    return res.json({ _id: userExercises._id, username: userExercises.username, count: (userExercises.exercises ? userExercises.exercises.length : 0), logs: userExercises.exercises });
+    return res.json({ '_id': userExercises._id, 'username': userExercises.username, 'count': (userExercises.exercises ? userExercises.exercises.length : 0), 'logs': userExercises.exercises });
   });
 });
 
