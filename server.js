@@ -100,11 +100,13 @@ app.post("/api/users/:_id/exercises", function(req, res){
     (error, result) => {
       if (error) return
       var resObj = {};
+      var exercise = {};
       resObj["_id"] = result._id;
       resObj["username"] = result.username;
-      resObj["date"] = newExercise.date;
-      resObj["duration"] = newExercise.duration;
-      resObj["description"] = newExercise.description;
+      exercise["date"] = newExercise.date;
+      exercise["duration"] = newExercise.duration;
+      exercise["description"] = newExercise.description;
+      resObj["exercise"] = exercise;
       res.json(resObj);
       console.log(result);
   });
